@@ -1,3 +1,7 @@
+/* Normalize CSS */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css');
+
+/* General Styles */
 body, html {
     margin: 0;
     padding: 0;
@@ -91,7 +95,7 @@ h1.animated-heading {
 }
 
 .wide-input select {
-    width: 80%; 
+    width: 100%; 
     margin: 0 auto;
 }
 
