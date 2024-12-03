@@ -52,39 +52,27 @@ document.getElementById('calculateBtn').addEventListener('click', function () {
             return;
         }
 
-        if (unitSystem === 'imperial') {
-            const weightInKg = weight / 2.20462;
-            if (weightInKg < 3 || weightInKg > 300) {
-                errorContainer.innerHTML = '<b>Please enter a valid weight (6.6-661.4 lbs).</b>';
-                resetInputs();
-                return;
-            }
-        } else {
-            if (weight < 3 || weight > 300) {
-                errorContainer.innerHTML = '<b>Please enter a valid weight (3-300 kg).</b>';
-                resetInputs();
-                return;
-            }
+        const weightInKg = unitSystem === 'imperial' ? weight / 2.20462 : weight;
+        if (weightInKg < 3 || weightInKg > 300) {
+            errorContainer.innerHTML = `<b>Please enter a valid weight (${unitSystem === 'imperial' ? '6.6-661.4 lbs' : '3-300 kg'}).</b>`;
+            resetInputs();
+            return;
         }
 
-        let baseIntake;
+        let baseIntake = weightInKg * 0.033;
+        let exerciseDuration = 0;
 
-        if (unitSystem === 'imperial') {
-            baseIntake = weight * 0.67;
-        } else {
-            baseIntake = weight * 0.033814;
+        if (activity === 'moderate') exerciseDuration = 30;  
+        else if (activity === 'active') exerciseDuration = 60; 
+
+        const exerciseAdjustment = exerciseDuration * 0.012;
+        baseIntake += exerciseAdjustment;
+
+        if (gender === 'female' && pregnancy === 'pregnant') {
+            baseIntake += 0.36;  
         }
 
-        if (gender === 'female') {
-            if (pregnancy === 'pregnant') {
-                baseIntake += 20;
-            }
-        }
-
-        if (activity === 'moderate') baseIntake *= 1.2;
-        else if (activity === 'active') baseIntake *= 1.4;
-
-        const waterInLiters = baseIntake * 0.0295735;
+        const waterInLiters = baseIntake;
         const waterInMl = waterInLiters * 1000;
 
         const resultText = `You should\n drink about\n ${baseIntake.toFixed(2)} oz\n (${waterInLiters.toFixed(2)} liters / ${waterInMl.toFixed(0)} ml)\n of water\n per day.`;
@@ -111,3 +99,4 @@ function resetInputs() {
 document.getElementById('reset-button').addEventListener('click', () => {
     location.reload();
 });
+
